@@ -14,11 +14,76 @@ See also: [Design Documents](../design) - may contain details on future plans th
 
 {% include toc.html %}
 
-## Next Update
+## Next Tasks
 
-We just finished a new 1.20.1 update adding quite a few roadmap items. We plan to focus on bug fixes for a short time along with some other projects, then after that will shift focus to 1.21.1 NeoForge.
+We just finished a new 1.20.1 update adding quite a few roadmap items, plus a bug fix release making it stable. Next project is to work on another project briefly before starting 1.21 NeoForge ports.
 
 1.19.2 and 1.18.2 are both considered stable. We plan at least 1 more bugfix release for each version, but its to be determined how many bug fixes make it to each which are not already coded.
+
+## 1.21 Changes
+
+This section contains various tweaks to tools that came up during the design or discussion of the Throwback update, but felt too large to make in 1.20. They will most likely happen in the first 1.21 release, though these features are subject to change.
+
+### Smeltery
+
+#### Smeltery Tank Cleanup
+
+* Instead of fuel and ingot tanks, just have tanks and gauges.
+* Smeltery will have 4000mb tank volume.
+* Foundry will have the ingot tank volume.
+
+#### Scorched Faucet Tweaks
+
+* To better distinguish scorched from seared, planned to make it opaque as a more efficient on rendering pipe.
+* Pair with obsidian gauges to see your fluid if needed.
+* Not fully sold on this idea.
+
+
+### Tools
+
+#### Sword Guard and Stat Averaging
+
+* Swords and cleavers will get a new tool part, sword guards, which replaces one of their handles.
+    * Sword guards are a shield plating, allowing defensive material traits instead of offensive.
+    * This notably gates swords to tier 2 outside of maybe copper, but given we have both daggers and hand axes in tier 1 I think that is fine.
+* From there, many tools will get some stat adjustments with a focus on reducing tool part stat averaging. In most cases, we will just add up heads directly.
+* Broad tool multipliers may get reduced a bit as a result. In particular, broad weapon durability is way higher than you need other than on scythes.
+
+#### Better Slime Staffs
+
+* Slimestaffs could benefit from materials rather than the rather random stats they currently have.
+* Give them 2 bowlimbs, a [sword guard](#sword-guard-and-stat-averaging), and possibly a bowstring. Depends on whether I want 5 materials or 4.
+* Likely keep around the crystal as a material, to apply different slot types.
+
+#### Dual Wielding rework
+
+* Dual wielding will be limited to small tools again.
+* Dual wielding will no longer apply it's stat debuff.
+* This allows broad tools to get a level of reach, which is not compatible with dual wielding.
+* Consider letting broad tools get a second level of reach via ability slot.
+
+### Defense Rework
+
+Following sections contain a couple of changes to make plate armor more distinct from travelers, which is a little bit too good by comparison currently (as 1 defense slot does not quite compare to 1 ability slot).
+
+After the changes, traveler's potential before rebalanced will be 3 defense slots plus 1 defensive material trait (gained 1 slot but lost 1 potential trait). Plate will have 4 defense slots plus 2 defensive material traits (gained 1 slot).
+
+#### Slotless Defense slot
+
+* To keep armor from scaling too quickly, give +1 defense slot from a slotless modifier.
+* Most likely will do this using the armor trim modifier.
+  * Different trim variants will still be cosmetic. But applying any variant grants a defense slot.
+  * For armor like travelers goggles that do not fit trims, include an alternative form of trim that has no shapes, just materials. Crafted using any trim template.
+
+#### Jeweled Hide
+
+* With the introduction of many new types of maille, ancient hide feels a little redundant, just granting +1 defense slot.
+* With the introduction of the ancient tool material, ancient hide is a bit confusing.
+* To solve this, plan to replace ancient hide with jeweled hide, swapping the molten debris for molten diamond.
+* On pickaxes, will continue to grant fortune.
+* On armor, will grant revitalized.
+* On ranged weapons, will grant a boost to use item speed, letting you move more quickly while drawing back.
+
 
 ## Multiblock
 
@@ -59,16 +124,18 @@ We are still considering how this design best fits into the mod, and into the de
 Main page: [Soul Forge](soul-forge).
 </div>
 
-The soul forge is a planned multiblock for late game tool, modifier, and material crafting. The soul forge at earliest will come in 1.20, though 1.21 or later is more likely. For more information, see [Soul Forge](soul-forge).
+The soul forge is a planned multiblock for late game tool, modifier, and material crafting. The soul forge at earliest will come in 1.21. For more information, see [Soul Forge](soul-forge).
 
 ## Tools
 
-### Plate Armor slots
+### Halberds
+<div class="hatnote">Earliest 1.21, may wait for 1.21.11</div>
 
-* Give plate armor +1 defense slot and -1 upgrade slot.
-* Brings protection modifiers more in line with vanilla armor, making it easier to reach > 64% protection.
-* Makes plate armor more distinct from travelers, which is a little bit too good by comparison currently (as 1 defense slot does not quite compare to 1 ability slot).
-* Likely will target 1.21 with this change.
+* Tinkers' Construct implementation of the new vanilla spears.
+  * Can dash.
+  * Can jab.
+* Crafted from a broad axe head, 2 tough handles, and likely a sword guard.
+* Moved from Tinkers' Things as the reach halberd is made redundant by [dual wielding rework](#dual-wielding-rework)
 
 ### Materials
 
@@ -166,6 +233,20 @@ We want a system in place that will allow addons to add new behavior to existing
 
 We are considering moving the definition of tool parts to the tool recipe JSON. This would allow better control over part swapping behavior, along with allowing multiple recipes for a single tool and addons adding recipes for an existing tools without overriding resources.
 
+The first step for this change will be to move the part swapping code to the tool building recipe. This will reduce the number of recipes needed for things such as ammo to work.
+
 ### Migrate Away From Tool Loot Hook
 
 We keep reconsidering whether the tool loot hook is worth having compared to modifiers just directly adding global loot modifiers.
+
+### Slots in crafted modifiers
+
+* Crafted modifiers will now store slots instea of just modifier ID and level.
+* Will be stored as a list based on the order they were applied.
+  * For example, luck will be stored as "ability, 1; slotless, 2".
+  * A modifier that alternates ability than upgrade would be stored as "ability, 1; upgrade, 1; ability, 1". Order is important.
+* Benefits:
+  * Simplifies modifier removal as the tool specifies how to remove them, no need to define extra recipes.
+  * If a modifier changes types, you can remove the old application to recover the old slot.
+  * If a modifier can be obtained in multiple ways, in theory this is usable to allow both to be mixed with the right type removing.
+  * No need to track used modifiers in persistent data, making it easier to drop should it be impractical with components.

@@ -44,7 +44,7 @@
     left: -4px;
 }
 
-.grid-icon-list-3, .grid-icon-list-4, .grid-icon-list-5, .grid-icon-list-6, .grid-icon-list-7 {
+.grid-icon-list {
     left: 30px;
     display: grid;
     position: absolute;

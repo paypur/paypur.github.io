@@ -55,10 +55,10 @@
 
 .grid-icon-list-3 {
     grid-template-columns: repeat(3, 1fr);
-    width: 240px;
+    width: 270px;
     img {
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
     }
 }
 
@@ -143,9 +143,9 @@
 
 .row-material-stats {
     width: 332px; /* really 324px is more correct, but I can't get things to line up */
-> .column {
-    row-gap: 22px;
-}
+    > .column {
+        row-gap: 22px;
+    }
     > div {
         width: 100%
     }
